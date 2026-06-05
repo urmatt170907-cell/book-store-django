@@ -1,0 +1,8 @@
+<h2>Продукты из категории: {{ category.name }}</h2>
+{% for product in products %}
+    <p>📦 {{ product.name }} — <b>{{ product.price }} сом</b></p>
+{% empty %}
+    <p>В этой категории пока нет товаров.</p>
+{% endfor %}
+<br>
+<a href="{% url 'all_categories' %}">Назад к категориям</a>

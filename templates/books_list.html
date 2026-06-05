@@ -1,0 +1,9 @@
+<a href="{% url 'home' %}">⬅️ На главную</a>
+<hr>
+<h2>Список всех книг</h2>
+<p><a href="{% url 'book_create' %}">➕ Добавить новую книгу</a></p>
+{% for book in books %}
+    <p><a href="{% url 'book_detail' book.pk %}">{{ book.title }}</a> — {{ book.author }}</p>
+{% empty %}
+    <p>Книг пока нет.</p>
+{% endfor %}

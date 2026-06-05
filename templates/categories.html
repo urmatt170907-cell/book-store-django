@@ -1,0 +1,9 @@
+<a href="{% url 'home' %}">⬅️ На главную</a>
+<hr>
+<h2>Категории товаров магазина</h2>
+<ul>
+    {% for category in categories %}
+        <li><a href="{% url 'category_products' category.id %}">{{ category.name }}</a></li>
+    {% endfor %}
+</ul>
+<a href="{% url 'all_products' %}">Посмотреть все товары</a>

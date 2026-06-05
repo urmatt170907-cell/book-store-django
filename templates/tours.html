@@ -1,0 +1,84 @@
+<a href="{% url 'home' %}">⬅️ На главную</a>
+<hr>
+
+<h2>⚙️ Панель добавления (Управление турами)</h2>
+
+<h3>1. Добавить категорию тура</h3>
+<form method="POST" action="{% url 'create_tour_category' %}">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="Название (Семейный, Детский)" required>
+    <button type="submit">Создать категорию</button>
+</form>
+
+<h3>2. Добавить новый конный тур</h3>
+<form method="POST" action="{% url 'create_horse_tour' %}">
+    {% csrf_token %}
+    <p>Название тура: <input type="text" name="title" required></p>
+    <p>Цена (сом): <input type="number" step="0.01" name="price" required></p>
+    <p>Выберите категории (зажмите Ctrl для выбора нескольких):<br>
+        <select name="categories" multiple>
+            {% for cat in categories %}
+                <option value="{{ cat.id }}">{{ cat.name }}</option>
+            {% endfor %}
+        </select>
+    </p>
+    <button type="submit">Создать тур</button>
+</form>
+
+<h3>3. Добавить лошадь в систему</h3>
+<form method="POST" action="{% url 'create_horse' %}">
+    {% csrf_token %}
+    <input type="text" name="name" placeholder="Кличка лошади" required>
+    <button type="submit">Добавить лошадь</button>
+</form>
+
+<hr>
+
+<h2>Доступные Конные Туры</h2>
+{% for tour in tours %}
+    <h3>Тур: {{ tour.title }} — {{ tour.price }} сом</h3>
+    <p>Категории: 
+        {% for cat in tour.categories.all %}
+            [{{ cat.name }}] 
+        {% empty %}
+            Без категории
+        {% endfor %}
+    </p>
+    
+    <h4>Отзывы:</h4>
+    {% for comment in tour.comments.all %}
+        <p>💬 {{ comment.text }} <small style="color: gray;">({{ comment.created_at|date:"d.m.Y H:i" }})</small></p>
+    {% empty %}
+        <p>Отзывов пока нет.</p>
+    {% endfor %}
+
+    <form method="POST" action="{% url 'add_comment' %}" style="margin-top: 10px;">
+        {% csrf_token %}
+        <input type="hidden" name="tour_id" value="{{ tour.id }}">
+        <input type="text" name="text" placeholder="Оставить комментарий..." required>
+        <button type="submit">Отправить</button>
+    </form>
+    <hr>
+{% empty %}
+    <p>Туров пока не создано. Используйте панель выше.</p>
+{% endfor %}
+
+<h2>Бронирование лошадей (1-к-1)</h2>
+{% for horse in horses %}
+    <p>🐴 Лошадь: <b>{{ horse.name }}</b> — 
+        {% if horse.booked_by %}
+            <span style="color: red;">Забронирована: {{ horse.booked_by.fullname }} (ID: {{ horse.booked_by.passport_id }})</span>
+        {% else %}
+            <span style="color: green;">Свободна</span>
+            <form method="POST" action="{% url 'book_horse' %}" style="display:inline; margin-left: 10px;">
+                {% csrf_token %}
+                <input type="hidden" name="horse_id" value="{{ horse.id }}">
+                <input type="text" name="fullname" placeholder="ФИО туриста" required>
+                <input type="text" name="passport_id" placeholder="Персональный номер" required>
+                <button type="submit">Забронировать</button>
+            </form>
+        {% endif %}
+    </p>
+{% empty %}
+    <p>Лошадей в системе нет. Добавьте их через форму выше.</p>
+{% endfor %}

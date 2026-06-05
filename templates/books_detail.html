@@ -1,6 +1,15 @@
-<p>Книга {{ title }}</p>
-<p>Автор {{ name }}</p>
-<p>Время {{ time }}</p>
-{% for i in capabilities %}
-     <p>{{ i }}</p>
-{% endfor %}
+<h1>{{ book.title }}</h1>
+<p>Автор: {{ book.author }}</p>
+<p>Описание: {{ book.description }}</p>
+<p>Количество страниц: {{ book.pages }}</p>
+<p>Забронировано штук: {{ book.reserved_count }}</p>
+
+{% if book.discount_code %}
+    <p style="color: green;">Применен промокод: {{ book.discount_code }}</p>
+{% else %}
+    <p style="color: gray;">Промокод не использовался (пункт не обязателен для заполнения)</p>
+{% endif %}
+
+<a href="{% url 'book_list' %}">Назад к списку</a>
+
+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
