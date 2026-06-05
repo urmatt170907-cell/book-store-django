@@ -1,0 +1,44 @@
+<a href="{% url 'home' %}">⬅️ На главную</a>
+
+<h2>Корзина покупок</h2>
+
+<p>
+    <a href="{% url 'create_basket' %}">
+        ➕ Добавить товар
+    </a>
+</p>
+
+{% for basket in baskets %}
+    <hr>
+
+    <p>
+        <b>{{ basket.product_name }}</b>
+    </p>
+
+    <p>
+        Количество: {{ basket.quantity }}
+    </p>
+
+    <p>
+        Цена: {{ basket.price }}
+    </p>
+
+    <p>
+        Покупатель: {{ basket.customer_name }}
+    </p>
+
+    <p>
+        {{ basket.note }}
+    </p>
+
+    <a href="{% url 'update_basket' basket.id %}">
+        ✏️ Изменить
+    </a>
+
+    <a href="{% url 'delete_basket' basket.id %}">
+        ❌ Удалить
+    </a>
+
+{% empty %}
+    <p>Корзина пока пустая.</p>
+{% endfor %}

@@ -1,0 +1,14 @@
+<h2>Редактирование товара</h2>
+
+<form method="POST">
+    {% csrf_token %}
+    {{ form.as_p }}
+
+    <button type="submit">
+        Обновить
+    </button>
+</form>
+
+<a href="{% url 'basket_list' %}">
+    Назад
+</a>
