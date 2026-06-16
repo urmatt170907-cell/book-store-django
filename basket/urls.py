@@ -4,25 +4,25 @@ from . import views
 urlpatterns = [
     path(
         'create_basket/',
-        views.create_basket_view,
+        views.BasketCreateView.as_view(),
         name='create_basket'
     ),
 
     path(
         'basket_list/',
-        views.basket_list_view,
+        views.BasketListView.as_view(),
         name='basket_list'
     ),
 
     path(
         'basket_list/<int:id>/update/',
-        views.update_basket_view,
+        views.BasketUpdateView.as_view(),
         name='update_basket'
     ),
 
     path(
         'basket_list/<int:id>/delete/',
-        views.delete_basket_view,
+        views.BasketDeleteView.as_view(),
         name='delete_basket'
     ),
 ]

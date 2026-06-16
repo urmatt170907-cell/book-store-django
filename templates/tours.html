@@ -1,3 +1,7 @@
+<form method="get">
+    <input type="text" name="s" placeholder="Поиск тура">
+    <button type="submit">Найти</button>
+</form>
 <a href="{% url 'home' %}">⬅️ На главную</a>
 <hr>
 
@@ -82,3 +86,12 @@
 {% empty %}
     <p>Лошадей в системе нет. Добавьте их через форму выше.</p>
 {% endfor %}
+{% if tours.has_previous %}
+<a href="?page={{ tours.previous_page_number }}">Назад</a>
+{% endif %}
+
+{{ tours.number }}
+
+{% if tours.has_next %}
+<a href="?page={{ tours.next_page_number }}">Вперед</a>
+{% endif %}

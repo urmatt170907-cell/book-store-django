@@ -1,38 +1,90 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from django.http import HttpResponse
+from django.views import generic
+from django.shortcuts import redirect
+from django.db.models import Q
 from .models import Book
+from django.db.models import F
 
-def home_view(request):
-    if request.method == 'GET':
-        return render(request, 'home.html')
 
-def book_list_view(request):
-    if request.method == 'GET':
-        books = Book.objects.all()
-        return render(request, 'books_list.html', {'books': books})
+class HomeView(generic.TemplateView):
+    template_name = "home.html"
 
-def book_create_view(request):
-    if request.method == 'POST':
-        title = request.POST.get('title')
-        author = request.POST.get('author')
-        description = request.POST.get('description')
-        price = request.POST.get('price')
-        published_date = request.POST.get('published_date')
-        pages = request.POST.get('pages')
-        reserved_count = request.POST.get('reserved_count')
-        discount_code = request.POST.get('discount_code') or None
-        cover_image = request.FILES.get('cover_image')
-        book_file = request.FILES.get('book_file')
 
-        Book.objects.create(
-            title=title, author=author, description=description, price=price,
-            published_date=published_date, pages=pages, reserved_count=reserved_count,
-            discount_code=discount_code, cover_image=cover_image, book_file=book_file
-        )
-        return redirect('book_list')
-    return render(request, 'book_form.html')
+class BookListView(generic.ListView):
+    template_name = "books_list.html"
+    model = Book
+    paginate_by = 2
+    ordering = ["-id"]
 
-def book_detail_view(request, pk):
-    if request.method == 'GET':
-        book = get_object_or_404(Book, pk=pk)
-        return render(request, 'books_detail.html', {'book': book})
+    def get_queryset(self):
+        return self.model.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["books"] = context["page_obj"]
+        return context
+
+
+class BookDetailView(generic.DetailView):
+    template_name = "books_detail.html"
+    context_object_name = "book"
+    model = Book
+    pk_url_kwarg = "pk"
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset)
+        request = self.request
+        viewed_books = request.session.get("viewed_books", [])
+
+        if obj.pk not in viewed_books:
+            self.model.objects.filter(pk=obj.pk).update(
+                views=F("views") + 1
+            )
+            viewed_books.append(obj.pk)
+            request.session["viewed_books"] = viewed_books
+            obj.refresh_from_db()
+
+        return obj
+
+
+class BookCreateView(generic.CreateView):
+    model = Book
+    template_name = "book_form.html"
+
+    fields = [
+        "title",
+        "author",
+        "description",
+        "price",
+        "published_date",
+        "is_available",
+        "pages",
+        "cover_image",
+        "book_file",
+        "discount_code",
+        "reserved_count",
+    ]
+
+    success_url = "/books/"
+
+
+class SearchBookView(generic.ListView):
+    template_name = "books_list.html"
+    model = Book
+    paginate_by = 2
+
+    def get_queryset(self):
+        query = self.request.GET.get("s")
+
+        if query:
+            return self.model.objects.filter(
+                Q(title__icontains=query) |
+                Q(author__icontains=query)
+            )
+
+        return self.model.objects.all()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["books"] = context["page_obj"]
+        context["s"] = self.request.GET.get("s")
+        return context 

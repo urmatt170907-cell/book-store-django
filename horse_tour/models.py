@@ -24,6 +24,7 @@ class HorseTour(models.Model):
     title = models.CharField(max_length=200, verbose_name="Название тура")
     price = models.DecimalField(max_digits=6, decimal_places=2, verbose_name="Цена тура")
     categories = models.ManyToManyField(TourCategory, verbose_name="Категории")
+    views = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return self.title

@@ -1,9 +1,56 @@
 <a href="{% url 'home' %}">⬅️ На главную</a>
 <hr>
 <h2>Список всех книг</h2>
+<form action="{% url 'search_book' %}" method="get">
+    <input
+        type="text"
+        name="s"
+        placeholder="Поиск книги..."
+        value="{{ s }}"
+    >
+
+    <button type="submit">
+        Найти
+    </button>
+</form>
+
+<br>
 <p><a href="{% url 'book_create' %}">➕ Добавить новую книгу</a></p>
 {% for book in books %}
     <p><a href="{% url 'book_detail' book.pk %}">{{ book.title }}</a> — {{ book.author }}</p>
 {% empty %}
     <p>Книг пока нет.</p>
 {% endfor %}
+<div>
+
+{% if page_obj.has_previous %}
+<a href="?page=1">Первая</a>
+
+<a href="?page={{ page_obj.previous_page_number }}">
+Назад
+</a>
+{% endif %}
+
+<span>
+
+Страница {{ page_obj.number }}
+
+из
+
+{{ page_obj.paginator.num_pages }}
+
+</span>
+
+{% if page_obj.has_next %}
+
+<a href="?page={{ page_obj.next_page_number }}">
+Вперед
+</a>
+
+<a href="?page={{ page_obj.paginator.num_pages }}">
+Последняя
+</a>
+
+{% endif %}
+
+</div>

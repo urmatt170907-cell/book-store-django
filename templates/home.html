@@ -5,15 +5,31 @@
     <title>Главная страница</title>
 </head>
 <body>
-    <h1>Навигация по разделам</h1>
+
+    <h1>Навигация по проекту</h1>
 
     <nav>
         <ul>
             <li><a href="{% url 'book_list' %}">📚 Книжный магазин</a></li>
+
+            <li><a href="{% url 'book_create' %}">➕ Добавить книгу</a></li>
+
+            <li><a href="{% url 'search_book' %}?s=">🔍 Поиск книг</a></li>
+
             <li><a href="{% url 'horse_tours' %}">🐴 Конные туры</a></li>
+
             <li><a href="{% url 'all_categories' %}">📦 Категории магазина</a></li>
+
             <li><a href="{% url 'basket_list' %}">🛒 Корзина покупок</a></li>
+
+            <li><a href="{% url 'register' %}">📝 Регистрация кандидата</a></li>
+
+            <li><a href="{% url 'candidate_list' %}">👥 Список кандидатов</a></li>
+
+            <li><a href="{% url 'login' %}">🔐 Вход</a></li>
+            
         </ul>
     </nav>
+
 </body>
 </html>

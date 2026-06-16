@@ -1,0 +1,33 @@
+<form method="get">
+    <input type="text" name="s" placeholder="Поиск">
+    <button type="submit">Найти</button>
+</form>
+{% if page_obj.has_previous %}
+<a href="?page={{ page_obj.previous_page_number }}">Назад</a>
+{% endif %}
+
+{{ page_obj.number }}
+
+{% if page_obj.has_next %}
+<a href="?page={{ page_obj.next_page_number }}">Вперед</a>
+{% endif %}
+<h2>Список кандидатов</h2>
+
+{% for candidate in candidates %}
+
+<p>
+<b>{{ candidate.first_name }} {{ candidate.last_name }}</b><br>
+
+Возраст: {{ candidate.age }}<br>
+Профессия: {{ candidate.profession }}<br>
+Телефон: {{ candidate.phone }}
+
+</p>
+
+<hr>
+
+{% empty %}
+
+<p>Кандидатов нет.</p>
+
+{% endfor %}

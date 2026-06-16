@@ -1,0 +1,30 @@
+<h2>Авторизация</h2>
+
+<form method="post">
+    {% csrf_token %}
+
+    <p>
+        <label>Логин</label>
+        <input type="text" name="login">
+    </p>
+
+    <p>
+        <label>Пароль</label>
+        <input type="password" name="password">
+    </p>
+
+    <p>
+        <label>Сколько будет 2 + 3 ?</label>
+        <input type="text" name="captcha">
+    </p>
+
+    {% if error %}
+        <p style="color:red;">
+            {{ error }}
+        </p>
+    {% endif %}
+
+    <button type="submit">
+        Войти
+    </button>
+</form>
