@@ -1,0 +1,10 @@
+{% extends 'cineboard/base.html' %}
+{% block content %}
+<h2 class="text-warning">🎟 Бронирование VIP места</h2>
+<p class="text-white">Вы хотите забронировать VIP место? У каждого пользователя только одно место.</p>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-warning">Подтвердить бронь</button>
+    <a href="/cineboard/" class="btn btn-secondary">Отмена</a>
+</form>
+{% endblock %}

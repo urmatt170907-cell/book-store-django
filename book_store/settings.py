@@ -21,6 +21,7 @@ INSTALLED_APPS = [
     'myShop',
     'basket',
     'users',
+    'CineBoard',
 ]
 
 MIDDLEWARE = [
